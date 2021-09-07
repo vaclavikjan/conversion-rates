@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
 import useRates from '../hooks/useRates';
 
@@ -7,8 +7,13 @@ export default function RatesScreen() {
   const rates = useRates();
 
   return (
-    <View>
+    <ScrollView>
       <Text>Rates Screen</Text>
-    </View>
+      <View>
+        {rates.data?.map((item) => (
+          <Text key={item.code}>{`${item.country}: 1 ${item.currency} = ${item.rate / item.quantity} CZK`}</Text>
+        ))}
+      </View>
+    </ScrollView>
   );
 }

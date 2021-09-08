@@ -1,5 +1,7 @@
 # React Native Currency Conversion Rates
 
+![App demo](https://media3.giphy.com/media/JzXs5Z9oG0Ez10nHDt/giphy.gif)
+
 ## **Installing**
 
 In the project root directory run following commands:
@@ -22,6 +24,7 @@ Run `yarn ios` in the root of the React Native project.
 ### **Nice-to-have todos**
 
 - [ ] Android support
+- [ ] Snapshot and unit tests
 - [ ] Network status handling
 - [ ] Keyboard dismiss on tap outside keyboard/modal
 - [ ] Translations using i18n

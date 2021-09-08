@@ -1,22 +1,15 @@
 import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import moment from 'moment';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Button, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { ActivityIndicator, Button, Text, TextInput, View } from 'react-native';
 
+import CurrencySelector from '../components/app/currency/CurrencySelector';
+import FlexContainer from '../components/ui/containers/FlexContainer';
+import PaddingContainer from '../components/ui/containers/PaddingContainer';
+import MainHeading from '../components/ui/text/headings/MainHeading';
+import MiniText from '../components/ui/text/text/MiniText';
 import useRates from '../hooks/useRates';
 import { IRate } from '../types/entities';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-    backgroundColor: 'grey',
-  },
-  contentContainer: {
-    flex: 1,
-    alignItems: 'center',
-  },
-});
 
 export default function ConversionScreen() {
   const rates = useRates();
@@ -30,26 +23,27 @@ export default function ConversionScreen() {
     }
   }, [rates.isLoading]);
 
-  // ref
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  // variables
   const snapPoints = useMemo(() => ['25%', '50%'], []);
 
-  const handlePresentModalOpen = useCallback(() => {
-    bottomSheetModalRef.current?.present();
-  }, []);
-
-  const handlePresentModalClose = useCallback(() => {
+  const onCurrencySelect = (currency: IRate) => {
+    setSelectedConversionCurrency(currency);
     bottomSheetModalRef.current?.close();
-  }, []);
+  };
 
   return (
     <BottomSheetModalProvider>
-      <View>
-        <Text>Convertion Screen</Text>
-        <Text>{`Last update at ${moment(rates.dataUpdatedAt).format('HH:mm - DD. MM. YYYY')}`}</Text>
-        <Button onPress={handlePresentModalOpen} title="Present Modal" color="black" />
+      <FlexContainer>
+        <PaddingContainer paddingLeft={2} paddingRight={2} paddingTop={2} paddingBottom={4}>
+          <MainHeading>Conversion from CZK</MainHeading>
+          <MiniText>{`Last update at ${moment(rates.dataUpdatedAt).format('HH:mm - DD. MM. YYYY')}`}</MiniText>
+        </PaddingContainer>
+        <Button
+          onPress={() => bottomSheetModalRef.current?.present()}
+          title="Select conversion currency"
+          color="black"
+        />
 
         <View>
           <TextInput
@@ -62,24 +56,18 @@ export default function ConversionScreen() {
             <Text>{`${currencyInput / selectedConversionCurrency.rate} ${selectedConversionCurrency.currency}`}</Text>
           )}
           <BottomSheetModal ref={bottomSheetModalRef} index={1} snapPoints={snapPoints} enablePanDownToClose>
-            <ScrollView>
-              <View style={styles.contentContainer}>
-                {rates?.data?.map((rate) => (
-                  <TouchableOpacity
-                    key={rate.country}
-                    onPress={() => {
-                      setSelectedConversionCurrency(rate);
-                      handlePresentModalClose();
-                    }}
-                  >
-                    <Text>{`${rate.country} ${rate.currency}`}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </ScrollView>
+            {rates.data && selectedConversionCurrency ? (
+              <CurrencySelector
+                currencies={rates?.data}
+                selectedCurrency={selectedConversionCurrency}
+                onSelect={onCurrencySelect}
+              />
+            ) : (
+              <ActivityIndicator animating />
+            )}
           </BottomSheetModal>
         </View>
-      </View>
+      </FlexContainer>
     </BottomSheetModalProvider>
   );
 }

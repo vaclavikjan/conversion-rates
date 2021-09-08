@@ -1,33 +1,35 @@
 import moment from 'moment';
 import React from 'react';
+import { FlatList } from 'react-native';
 
-import PrimaryButton from '../components/ui/buttons/PrimaryButton';
-import BasicContainer from '../components/ui/containers/BasicContainer';
-import ScrollContainer from '../components/ui/containers/ScrollContainer';
+import RatesHeader from '../components/app/rates/RatesHeader';
+import RatesRow from '../components/app/rates/RatesRow';
+import FlexContainer from '../components/ui/containers/FlexContainer';
+import PaddingContainer from '../components/ui/containers/PaddingContainer';
 import MainHeading from '../components/ui/text/headings/MainHeading';
 import MiniText from '../components/ui/text/text/MiniText';
-import NormalText from '../components/ui/text/text/NormalText';
 import useRates from '../hooks/useRates';
 
 export default function RatesScreen() {
   const rates = useRates();
 
   return (
-    <ScrollContainer>
-      <MainHeading>Rates Screen</MainHeading>
-      <MiniText>{`Last update at ${moment(rates.dataUpdatedAt).format('HH:mm - DD. MM. YYYY')}`}</MiniText>
-      {rates.isLoading ? (
-        <MiniText>loading ...</MiniText>
-      ) : (
-        <BasicContainer>
-          {rates.data?.map((item) => (
-            <NormalText key={item.code}>{`${item.country}: 1 ${item.currency} = ${
-              item.rate / item.quantity
-            } CZK`}</NormalText>
-          ))}
-        </BasicContainer>
-      )}
-      <PrimaryButton onPress={() => rates.refetch()} text="Refetch" />
-    </ScrollContainer>
+    <FlexContainer>
+      <PaddingContainer paddingLeft={2} paddingRight={2} paddingTop={2} paddingBottom={4}>
+        <MainHeading>Current CZK rates</MainHeading>
+        <MiniText>{`Last update at ${moment(rates.dataUpdatedAt).format(
+          'HH:mm - DD. MM. YYYY',
+        )} (pull to refresh)`}</MiniText>
+      </PaddingContainer>
+      <FlatList
+        onRefresh={() => rates.refetch()}
+        refreshing={rates?.isLoading || false}
+        stickyHeaderIndices={[0]}
+        ListHeaderComponent={() => <RatesHeader />}
+        keyExtractor={(item) => item.code}
+        data={rates.data}
+        renderItem={(row) => <RatesRow item={row.item} />}
+      />
+    </FlexContainer>
   );
 }

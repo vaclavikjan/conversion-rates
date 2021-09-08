@@ -16,7 +16,7 @@ export default function RatesScreen() {
   return (
     <FlexContainer>
       <PaddingContainer paddingLeft={4} paddingRight={4} paddingTop={2} paddingBottom={4}>
-        <MainHeading>Current CZK rates</MainHeading>
+        <MainHeading>Current CZK rates 📈</MainHeading>
         <MiniText>{`Last update at ${moment(rates.dataUpdatedAt).format(
           'HH:mm - DD. MM. YYYY',
         )} (pull to refresh)`}</MiniText>

@@ -21,6 +21,7 @@ Run `yarn ios` in the root of the React Native project.
 
 ### **Nice-to-have todos**
 
+- [ ] Android support
 - [ ] Network status handling
 - [ ] Keyboard dismiss on tap outside keyboard/modal
 - [ ] Translations using i18n

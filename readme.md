@@ -18,3 +18,11 @@ Run `yarn ios` in the root of the React Native project.
 - react-navigation
 - moment
 - axios
+
+### **Nice-to-have todos**
+
+- [ ] Network status handling
+- [ ] Keyboard dismiss on tap outside keyboard/modal
+- [ ] Translations using i18n
+- [ ] Some decent UI design
+- [ ] Advanced input validation
